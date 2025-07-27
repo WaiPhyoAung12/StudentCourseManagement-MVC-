@@ -1,0 +1,102 @@
+﻿@using StudentCourseManagement.Models.Courses
+@model CourseRequestModel;
+
+<div asp-validation-summary="ModelOnly"></div>
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Course Create Form</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Course</a></li>
+                    <li class="breadcrumb-item active">Course Create Form</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<form class="shadow row d-flex justify-content-center" asp-controller="Course" asp-action="CreateCourse">
+    <div class="card-body col-md-6 col-sm-12">
+        <div class="form-group">
+            <label for="courseCode">Course Code</label>
+            <input type="text" asp-for="CourseCode" class="form-control" id="courseCode" placeholder="Enter course code">
+            <span asp-validation-for="CourseCode" class="text-danger"></span>
+            
+        </div>
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" asp-for="CourseTitle" class="form-control" id="title" placeholder="Enter Title">
+            <span asp-validation-for="CourseTitle" class="text-danger"></span>
+
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" asp-for="CourseDescription" class="form-control" id="description" placeholder="Enter Description">
+            <span asp-validation-for="CourseDescription" class="text-danger"></span>
+
+        </div>
+        <div class="form-group d-flex justify-content-end">
+            <div>
+                <button type="reset" class="btn btn-secondary">Cancel</button>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary mr-2" data-bs-toggle="modal" data-bs-target="#dialogModal">Submit</button>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+@if (ViewBag.Message != null)
+{
+    <!-- Modal -->
+    <div class="modal fade" id="dialogModal" tabindex="-1" aria-labelledby="dialogModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Create Course</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @ViewBag.Message
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="confirmRedirectBtn" class="btn btn-primary">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            var isSuccess = '@ViewBag.IsSuccess' === 'True';
+            var hasMessage = '@ViewBag.Message' !== '';
+
+            if (isSuccess && hasMessage) {
+                $('#dialogModal').modal('show');
+            }
+
+            $('#confirmRedirectBtn').on('click', function () {
+                if (isSuccess) {
+                    window.location.href = '@Url.Action("ViewDetails", "Course")';
+                }
+            });
+
+            $('#dialogModal').on('hidden.bs.modal', function () {
+                if (isSuccess) {
+                    window.location.href = '@Url.Action("ViewDetails", "Course")';
+                }
+            });
+        });
+    </script>
+}
+
