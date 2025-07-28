@@ -38,3 +38,51 @@ $(function () {
 //        }, false)
 //    })
 //})
+
+$(document).ready(function () {
+    $('#courseTable').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "ajax": {
+            url: "/Course/GetList",
+            type: "POST",
+            dataSrc: function (json) {
+                return json.data; // <- Make sure this matches the shape of your JSON
+            }
+        },
+        "columns": [
+            { "data": "courseCode" },
+            { "data": "courseTitle" },
+            {
+                data: 'id', // assuming each row has a unique ID
+                width: '20%',
+                render: function (data, type, row) {
+                    return `
+                        <div class="d-flex justify-content-center">
+                            <a href="/Course/Edit/${data}" class="btn btn-sm btn-primary mr-2">Edit</a>
+                            <a onclick="deleteCourse(${data})" class="btn btn-sm btn-danger">Delete</a>
+                        </div>
+                    `;
+                },
+                orderable: false,
+                searchable: false
+            }
+        ]
+    });
+});
+function deleteCourse(id) {
+    if (confirm("Are you sure you want to delete this course?")) {
+        $.ajax({
+            url: `/Course/Delete/${id}`,
+            type: 'GET',
+            success: function (result) {
+                alert('Success deleting course.');
+                $('#courseTable').DataTable().ajax.reload(); // Refresh table
+            },
+            error: function () {
+                alert('Error deleting course.');
+            }
+        });
+    }
+}
+

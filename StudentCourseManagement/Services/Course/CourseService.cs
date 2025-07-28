@@ -17,4 +17,28 @@ public class CourseService : ICourseService
         var result=await _courseRepo.CreateCourse(requestModel);
         return result;
     }
+
+    public async Task<Result<CourseModel>> Delete(int id)
+    {
+        var result=await _courseRepo.Delete(id);
+        return result;
+    }
+
+    public async Task<Result<CourseListResponseModel>> GetCourse(CourseListPaginationModel courseListPagination)
+    {
+        var result = await _courseRepo.GetCourse(courseListPagination);
+        return result;
+    }
+
+    public async Task<Result<CourseModel>> GetCourseById(int id)
+    {
+        var result=await _courseRepo.GetCourseById(id);
+        return result;
+    }
+
+    public async Task<Result<CourseModel>> UpdateCourse(CourseRequestModel requestModel)
+    {
+        var result=await _courseRepo.UpdateCourse(requestModel);
+        return result;
+    }
 }

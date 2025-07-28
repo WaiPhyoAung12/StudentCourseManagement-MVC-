@@ -1,30 +1,28 @@
 ﻿@using StudentCourseManagement.Models.Courses
-@model CourseRequestModel;
-
-<div asp-validation-summary="ModelOnly"></div>
-
+@model CourseModel
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Course Create Form</h1>
+                <h1>Course Edit Form</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="#">Course</a></li>
-                    <li class="breadcrumb-item active">Course Create Form</li>
+                    <li class="breadcrumb-item active">Course Edit Form</li>
                 </ol>
             </div>
         </div>
     </div><!-- /.container-fluid -->
 </section>
-<form class="shadow row d-flex justify-content-center mx-2" asp-controller="Course" asp-action="CreateCourse">
+<form class="shadow row d-flex justify-content-center mx-2" asp-controller="Course" asp-action="Edit">
     <div class="card-body col-md-6 col-sm-12">
+        <input type="number" asp-for="Id" class="d-none"/>
         <div class="form-group">
             <label for="courseCode">Course Code</label>
             <input type="text" asp-for="CourseCode" class="form-control" id="courseCode" placeholder="Enter course code">
             <span asp-validation-for="CourseCode" class="text-danger"></span>
-            
+
         </div>
         <div class="form-group">
             <label for="title">Title</label>
@@ -70,33 +68,32 @@
         </div>
     </div>
 }
-
-
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
         $(document).ready(function () {
-            var isSuccess = '@ViewBag.IsSuccess' === 'True';
             var hasMessage = '@ViewBag.Message' !== '';
+            var isSuccess = '@ViewBag.IsSuccess' === 'True';
 
-            if (isSuccess && hasMessage) {
+            if (hasMessage) {
                 $('#dialogModal').modal('show');
             }
 
             $('#confirmRedirectBtn').on('click', function () {
+                $('#dialogModal').modal('hide');
                 if (isSuccess) {
                     window.location.href = '@Url.Action("ViewDetails", "Course")';
                 }
             });
 
             $('#dialogModal').on('hidden.bs.modal', function () {
-                if (isSuccess) {
+               $('#dialogModal').modal('hide');
+               if (isSuccess) {
                     window.location.href = '@Url.Action("ViewDetails", "Course")';
                 }
             });
         });
     </script>
 }
-
