@@ -36,6 +36,12 @@ public class CourseService : ICourseService
         return result;
     }
 
+    public async Task<Result<List<CourseModel>>> GetCourseList()
+    {
+        var result=await _courseRepo.GetCourseList();
+        return result;
+    }
+
     public async Task<Result<CourseModel>> UpdateCourse(CourseRequestModel requestModel)
     {
         var result=await _courseRepo.UpdateCourse(requestModel);

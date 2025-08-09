@@ -16,6 +16,8 @@ public partial class AppDbContext : DbContext
     {
     }
 
+    public virtual DbSet<TblBatch> TblBatches { get; set; }
+
     public virtual DbSet<TblCourse> TblCourses { get; set; }
 
     public virtual DbSet<TblStudent> TblStudents { get; set; }
@@ -29,6 +31,43 @@ public partial class AppDbContext : DbContext
         modelBuilder
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
+
+        modelBuilder.Entity<TblBatch>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("tbl_batch");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Capacity)
+                .HasPrecision(3, 2)
+                .HasColumnName("capacity");
+            entity.Property(e => e.CourseId).HasColumnName("course_id");
+            entity.Property(e => e.CreatedDateTime)
+                .HasColumnType("datetime")
+                .HasColumnName("created_date_time");
+            entity.Property(e => e.CreatedUserId)
+                .HasMaxLength(50)
+                .HasColumnName("created_user_id");
+            entity.Property(e => e.CreditHour)
+                .HasPrecision(3, 2)
+                .HasColumnName("credit_hour");
+            entity.Property(e => e.DeleteFlag)
+                .HasDefaultValueSql("'0'")
+                .HasColumnName("delete_flag");
+            entity.Property(e => e.Description)
+                .HasMaxLength(50)
+                .HasColumnName("description");
+            entity.Property(e => e.Title)
+                .HasMaxLength(50)
+                .HasColumnName("title");
+            entity.Property(e => e.UpdatedDateTime)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_date_time");
+            entity.Property(e => e.UpdatedUserId)
+                .HasMaxLength(50)
+                .HasColumnName("updated_user_id");
+        });
 
         modelBuilder.Entity<TblCourse>(entity =>
         {

@@ -10,4 +10,5 @@ public interface ICourseService
     Task<Result<CourseModel>> GetCourseById(int id);
     Task<Result<CourseModel>> UpdateCourse(CourseRequestModel requestModel);
     Task<Result<CourseModel>> Delete(int id);
+    Task<Result<List<CourseModel>>> GetCourseList();
 }

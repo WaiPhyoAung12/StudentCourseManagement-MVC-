@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StudentCourseManagement.AppDbContextModels;
 using StudentCourseManagement.Models.Courses;
+using StudentCourseManagement.Services.Batch;
 using StudentCourseManagement.Services.Course;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,7 +35,9 @@ builder.Services.AddControllersWithViews()
     });
 
 builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<IBatchService, BatchService>();
 builder.Services.AddScoped<CourseRepo>();
+builder.Services.AddScoped<BatchRepo>();
 var app = builder.Build();
 
 

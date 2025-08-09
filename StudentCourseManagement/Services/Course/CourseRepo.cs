@@ -4,6 +4,7 @@ using StudentCourseManagement.AppDbContextModels;
 using StudentCourseManagement.Constants;
 using StudentCourseManagement.Models.Courses;
 using StudentCourseManagement.Models.Shared.ResultModel;
+using StudentCourseManagement.Services.Shared;
 using System.Linq.Dynamic.Core;
 
 namespace StudentCourseManagement.Services.Course;
@@ -50,15 +51,7 @@ public class CourseRepo
         || x.CourseDescription.Contains(searchItem));
         }
         int totalCount=query.ToList().Count;
-        query=query.Skip(pageSettingModel.SkipCount).Take(pageSettingModel.TakeCount);
-
-        // Default sort column if null
-        var sortColumn = string.IsNullOrWhiteSpace(pageSettingModel.SortColumn) ? "CourseTitle" : pageSettingModel.SortColumn;
-        var sortDirection = pageSettingModel.SortDirection.ToLower() == "desc" ? "desc" : "asc";
-
-        var sort = $"{sortColumn} {sortDirection}";
-
-        query = query.OrderBy(sort);
+        query = query.GetPagination(pageSettingModel);
 
         var datalist = query.ToList();
 
@@ -120,5 +113,20 @@ public class CourseRepo
             return Result<CourseModel>.Fail(ConstantMessages.ErrorUpdate);
 
         return Result<CourseModel>.Success(ConstantMessages.SuccessUpdate);
+    }
+
+    public async Task<Result<List<CourseModel>>> GetCourseList()
+    {
+        var courseListModel = await _appDbContext.TblCourses
+                        .Where(x => x.DeleteFlag == false)
+                        .ToListAsync();
+
+        if (courseListModel.Count <= 0)
+            return Result<List<CourseModel>>.Fail(ConstantMessages.DataNotFound);
+
+        List<CourseModel> courseList = new();
+        courseList = courseListModel.Adapt<List<CourseModel>>();
+
+        return Result<List<CourseModel>>.Success(ConstantMessages.Success,courseList);
     }
 }

@@ -6,8 +6,9 @@ public class BatchModel
     public string BatchName { get; set; }
     public string Description { get; set; }
     public decimal CreditHour { get; set; }
-    public int Capacity { get; set; }
+    public decimal Capacity { get; set; }
     public int CourseId { get; set; }
+    public string CourseName { get; set; }
     public DateTime CreatedDateTime { get; set; }
     public DateTime UpdatedDateTime { get; set; }
     public string CreatedUserId { get; set; }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using StudentCourseManagement.Models.Courses;
 using StudentCourseManagement.Models.Shared.PageSetting;
 using StudentCourseManagement.Services.Course;
+using StudentCourseManagement.Services.Shared;
 using System;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -59,24 +60,8 @@ namespace StudentCourseManagement.Controllers
         public async Task<IActionResult> GetList()
         {
             var form = Request.Form;
-            int draw = Convert.ToInt32(form["draw"]);
 
-            int pageSize = Convert.ToInt32(form["length"]);
-            int skip = Convert.ToInt32(form["start"]);
-            string? searchValue = form["search[value]"];
-
-            string sortColumn = form[$"columns[{form["order[0][column]"]}][data]"];
-            string sortDirection = form["order[0][dir]"];
-
-            var pageSetting = new PageSettingModel
-            {
-                PageNumber = (skip / pageSize) + 1,
-                PageSize = pageSize,
-                SearchTerm = searchValue,
-                SortColumn = sortColumn,
-                SortDirection = sortDirection
-            };
-
+            var pageSetting = form.GetPageSettingModel();
             CourseListPaginationModel requestModel = new();
             requestModel.PageSetting = pageSetting;
 
@@ -85,12 +70,12 @@ namespace StudentCourseManagement.Controllers
             if (result.IsError)
                 return Json(new
                 {
-                    draw = draw
+                    draw = pageSetting.Draw,
                 });
 
             return Json(new
             {
-                draw = draw,
+                draw = pageSetting.Draw,
                 recordsTotal = result.Data.TotalCount,       // total records without filter
                 recordsFiltered = result.Data.CourseModels.Count,
                 data = result.Data.CourseModels

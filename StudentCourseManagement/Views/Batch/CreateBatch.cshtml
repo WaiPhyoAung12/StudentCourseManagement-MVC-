@@ -1,4 +1,6 @@
-﻿<section class="content-header">
+﻿@using StudentCourseManagement.Models.Batches
+@model BatchRequestModel
+<section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
@@ -13,49 +15,44 @@
         </div>
     </div><!-- /.container-fluid -->
 </section>
-<form class="shadow row d-flex justify-content-center">
+<form class="shadow row d-flex justify-content-center" asp-action="CreateBatch" method="post">
     <div class="card-body col-md-6 col-sm-12">
-@*         <div class="form-group">
-            <label for="courseCode">Course Code</label>
-            <input type="text" class="form-control" id="courseCode" placeholder="Enter course code">
-        </div> *@
         <div class="form-group">
-            <label>Minimal</label>
-            <select class="" id="testing" style="width: 100%;">
-                <option selected="selected" data-select2-id="19">Alabama</option>
-                <option data-select2-id="38">Alaska</option>
-                <option data-select2-id="39">California</option>
-                <option data-select2-id="40">Delaware</option>
-                <option data-select2-id="41">Tennessee</option>
-                <option data-select2-id="42">Texas</option>
-                <option data-select2-id="43">Washington</option>
+            <label>Course</label>
+            <select id="batchList" asp-for="CourseId" style="width: 100%;" class="is-invalid">
+                <option></option>
             </select>
-@*             <span class="select2 select2-container select2-container--bootstrap4 select2-container--above select2-container--focus" dir="ltr" data-select2-id="18" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-uvoz-container"><span class="select2-selection__rendered" id="select2-uvoz-container" role="textbox" aria-readonly="true" title="Alabama">Alabama</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
- *@        </div>
+            <span asp-validation-for="CourseId" class="text-danger"></span>
+        </div>
         <div class="form-group">
             <label for="title">Title</label>
-            <input type="text" class="form-control" id="title" placeholder="Title">
+            <input type="text" class="form-control is-invalid" id="title" asp-for="Title" placeholder="Title">
+            <span asp-validation-for="Title" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label for="description">Description</label>
-            <input type="text" class="form-control" id="description" placeholder="Description">
+            <input type="text" class="form-control is-invalid" id="description" asp-for="Description" placeholder="Description">
+            <span asp-validation-for="Description" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label for="credithours">Credit Hours</label>
-            <input type="number" class="form-control preventSign" min="1" id="credithours " placeholder="Credit Hours">
+            <input type="number" class="form-control preventSign is-invalid" min="1" id="credithours" asp-for="CreditHour" placeholder="Credit Hours">
+            <span asp-validation-for="CreditHour" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label for="capacity">Capacity</label>
-            <input type="number" class="form-control preventSign" min="1" id="capacity" placeholder="Capacity">
+            <input type="number" class="form-control preventSign is-invalid" min="1" id="capacity" asp-for="Capacity" placeholder="Capacity">
+            <span asp-validation-for="Capacity" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label>Start Date:</label>
             <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate">
+                <input type="text" class="form-control datetimepicker-input is-invalid" asp-for="StartDate" data-target="#reservationdate">
                 <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                 </div>
             </div>
+            <span asp-validation-for="StartDate" class="text-danger"></span>
         </div>
         <div class="form-group d-flex justify-content-end">
             <div>
@@ -68,3 +65,69 @@
     </div>
 
 </form>
+@if (ViewBag.Message != null)
+{
+    <!-- Modal -->
+    <div class="modal fade" id="dialogModal" tabindex="-1" aria-labelledby="dialogModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Create Course</h1>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="modal-body">
+                    @ViewBag.Message
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="confirmRedirectBtn" class="btn btn-primary">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#batchList').select2({
+                placeholder:"Choose Course",
+                allowClear: true,
+                type: 'GET',
+                ajax:{
+                    url:'/batch/GetCourseList',
+                    dataType:'json',
+                    processResults:function(data)
+                    {
+                        return{
+                                    results:data.map(function(item)
+                                    {
+                                        return {id:item.id,text:item.courseTitle}
+                                    })
+                               }
+                    }
+                }
+            })
+        })
+
+          $(document).ready(function () {
+            var isSuccess = '@ViewBag.IsSuccess' === 'True';
+            var hasMessage = '@ViewBag.Message' !== '';
+
+            if (isSuccess && hasMessage) {
+                $('#dialogModal').modal('show');
+            }
+
+            $('#confirmRedirectBtn').on('click', function () {
+                if (isSuccess) {
+                    window.location.href = '@Url.Action("getcourselist", "course")';
+                }
+            });
+
+            $('#dialogModal').on('hidden.bs.modal', function () {
+                if (isSuccess) {
+                    window.location.href = '@Url.Action("getcourselist", "course")';
+                }
+            });
+        });
+    </script>
+}

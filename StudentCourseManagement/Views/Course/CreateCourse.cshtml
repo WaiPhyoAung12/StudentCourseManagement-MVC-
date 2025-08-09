@@ -87,13 +87,13 @@
 
             $('#confirmRedirectBtn').on('click', function () {
                 if (isSuccess) {
-                    window.location.href = '@Url.Action("ViewDetails", "Course")';
+                    window.location.href = '@Url.Action("getcourselist", "course")';
                 }
             });
 
             $('#dialogModal').on('hidden.bs.modal', function () {
                 if (isSuccess) {
-                    window.location.href = '@Url.Action("ViewDetails", "Course")';
+                    window.location.href = '@Url.Action("getcourselist", "course")';
                 }
             });
         });

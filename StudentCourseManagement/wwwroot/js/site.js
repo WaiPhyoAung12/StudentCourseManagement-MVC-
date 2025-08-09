@@ -41,6 +41,31 @@ $(function () {
 
 $(document).ready(function () {
     $('#courseTable').DataTable({
+        dom: 'Bfrtip', // B = buttons, f = filter, r = processing, t = table, i = info, p = pagination
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':not(.no-export)'
+                },
+                text: '<i class="fas fa-file-excel"></i> Export Excel',
+                className: 'btn btn-success btn-sm',
+                init: function (api, node, config) {
+                    $(node).removeClass('dt-button');
+                },
+            },
+            {
+                extend: 'pdfHtml5',
+                exportOptions: {
+                    columns: ':not(.no-export)'
+                },
+                text: '<i class="fas fa-file-pdf"></i> Export PDF',
+                className: 'btn btn-danger btn-sm',
+                init: function (api, node, config) {
+                    $(node).removeClass('dt-button');
+                },
+            }
+        ],
         "processing": true,
         "serverSide": true,
         "ajax": {
@@ -59,8 +84,12 @@ $(document).ready(function () {
                 render: function (data, type, row) {
                     return `
                         <div class="d-flex justify-content-center">
-                            <a href="/Course/Edit/${data}" class="btn btn-sm btn-primary mr-2">Edit</a>
-                            <a onclick="deleteCourse(${data})" class="btn btn-sm btn-danger">Delete</a>
+                            <a href="/Course/Edit/${data}" class="btn btn-sm btn-primary mr-2" data-toggle="tooltip" title="Edit">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+                            <a onclick="deleteCourse(${data})" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Delete">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
                         </div>
                     `;
                 },
