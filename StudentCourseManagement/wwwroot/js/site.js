@@ -39,79 +39,155 @@ $(function () {
 //    })
 //})
 
-$(document).ready(function () {
-    $('#courseTable').DataTable({
-        dom: 'Bfrtip', // B = buttons, f = filter, r = processing, t = table, i = info, p = pagination
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                exportOptions: {
-                    columns: ':not(.no-export)'
-                },
-                text: '<i class="fas fa-file-excel"></i> Export Excel',
-                className: 'btn btn-success btn-sm',
-                init: function (api, node, config) {
-                    $(node).removeClass('dt-button');
-                },
-            },
-            {
-                extend: 'pdfHtml5',
-                exportOptions: {
-                    columns: ':not(.no-export)'
-                },
-                text: '<i class="fas fa-file-pdf"></i> Export PDF',
-                className: 'btn btn-danger btn-sm',
-                init: function (api, node, config) {
-                    $(node).removeClass('dt-button');
-                },
-            }
-        ],
-        "processing": true,
-        "serverSide": true,
-        "ajax": {
-            url: "/Course/GetList",
-            type: "POST",
-            dataSrc: function (json) {
-                return json.data; // <- Make sure this matches the shape of your JSON
-            }
-        },
-        "columns": [
-            { "data": "courseCode" },
-            { "data": "courseTitle" },
-            {
-                data: 'id', // assuming each row has a unique ID
-                width: '20%',
-                render: function (data, type, row) {
-                    return `
-                        <div class="d-flex justify-content-center">
-                            <a href="/Course/Edit/${data}" class="btn btn-sm btn-primary mr-2" data-toggle="tooltip" title="Edit">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </a>
-                            <a onclick="deleteCourse(${data})" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Delete">
-                                <i class="fa-solid fa-trash"></i>
-                            </a>
-                        </div>
-                    `;
-                },
-                orderable: false,
-                searchable: false
-            }
-        ]
-    });
-});
-function deleteCourse(id) {
-    if (confirm("Are you sure you want to delete this course?")) {
-        $.ajax({
-            url: `/Course/Delete/${id}`,
-            type: 'GET',
-            success: function (result) {
-                alert('Success deleting course.');
-                $('#courseTable').DataTable().ajax.reload(); // Refresh table
-            },
-            error: function () {
-                alert('Error deleting course.');
-            }
-        });
-    }
-}
+//$(document).ready(function () {
+//    $('#batchTable').DataTable({
+//        dom: 'Bfrtip', // B = buttons, f = filter, r = processing, t = table, i = info, p = pagination
+//        buttons: [
+//            {
+//                extend: 'excelHtml5',
+//                exportOptions: {
+//                    columns: ':not(.no-export)'
+//                },
+//                text: '<i class="fas fa-file-excel"></i> Export Excel',
+//                className: 'btn btn-success btn-sm',
+//                init: function (api, node, config) {
+//                    $(node).removeClass('dt-button');
+//                },
+//            },
+//            {
+//                extend: 'pdfHtml5',
+//                exportOptions: {
+//                    columns: ':not(.no-export)'
+//                },
+//                text: '<i class="fas fa-file-pdf"></i> Export PDF',
+//                className: 'btn btn-danger btn-sm',
+//                init: function (api, node, config) {
+//                    $(node).removeClass('dt-button');
+//                },
+//            }
+//        ],
+//        "processing": true,
+//        "serverSide": true,
+//        "ajax": {
+//            url: "/batch/GetList",
+//            type: "POST",
+//            dataSrc: function (json) {
+//                return json.data; // <- Make sure this matches the shape of your JSON
+//            }
+//        },
+//        "columns": [
+//            { "data": "title" },
+//            { "data": "description" },
+//            { "data": "capacity" },
+//            {
+//                data: 'id', // assuming each row has a unique ID
+//                width: '20%',
+//                render: function (data, type, row) {
+//                    return `
+//                                <div class="d-flex justify-content-center">
+//                                    <a href="/Course/Edit/${data}" class="btn btn-sm btn-primary mr-2" data-toggle="tooltip" title="Edit">
+//                                        <i class="fa-solid fa-pen-to-square"></i>
+//                                    </a>
+//                                    <a onclick="deleteCourse(${data})" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Delete">
+//                                        <i class="fa-solid fa-trash"></i>
+//                                    </a>
+//                                </div>
+//                            `;
+//                },
+//                orderable: false,
+//                searchable: false
+//            }
+//        ]
+//    });
+//});
 
+
+//$(document).ready(function () {
+//    $('#courseTable').DataTable({
+//        dom: 'Bfrtip', // B = buttons, f = filter, r = processing, t = table, i = info, p = pagination
+//        buttons: [
+//            {
+//                extend: 'excelHtml5',
+//                exportOptions: {
+//                    columns: ':not(.no-export)'
+//                },
+//                text: '<i class="fas fa-file-excel"></i> Export Excel',
+//                className: 'btn btn-success btn-sm',
+//                init: function (api, node, config) {
+//                    $(node).removeClass('dt-button');
+//                },
+//            },
+//            {
+//                extend: 'pdfHtml5',
+//                exportOptions: {
+//                    columns: ':not(.no-export)'
+//                },
+//                text: '<i class="fas fa-file-pdf"></i> Export PDF',
+//                className: 'btn btn-danger btn-sm',
+//                init: function (api, node, config) {
+//                    $(node).removeClass('dt-button');
+//                },
+//            }
+//        ],
+//        "processing": true,
+//        "serverSide": true,
+//        "ajax": {
+//            url: "/Course/GetList",
+//            type: "POST",
+//            dataSrc: function (json) {
+//                return json.data; // <- Make sure this matches the shape of your JSON
+//            }
+//        },
+//        "columns": [
+//            { "data": "courseCode" },
+//            { "data": "courseTitle" },
+//            {
+//                data: 'id', // assuming each row has a unique ID
+//                width: '20%',
+//                render: function (data, type, row) {
+//                    return `
+//                        <div class="d-flex justify-content-center">
+//                            <a href="/Course/Edit/${data}" class="btn btn-sm btn-primary mr-2" data-toggle="tooltip" title="Edit">
+//                                <i class="fa-solid fa-pen-to-square"></i>
+//                            </a>
+//                            <a onclick="deleteCourse(${data})" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Delete">
+//                                <i class="fa-solid fa-trash"></i>
+//                            </a>
+//                        </div>
+//                    `;
+//                },
+//                orderable: false,
+//                searchable: false
+//            }
+//        ]
+//    });
+//});
+
+//function deleteCourse(id) {
+//    if (confirm("Are you sure you want to delete this course?")) {
+//        $.ajax({
+//            url: `/Course/Delete/${id}`,
+//            type: 'GET',
+//            success: function (result) {
+//                alert('Success deleting course.');
+//                $('#courseTable').DataTable().ajax.reload(); // Refresh table
+//            },
+//            error: function () {
+//                alert('Error deleting course.');
+//            }
+//        });
+//    }
+//}
+
+
+function setCulture(culture) {
+    // Post to the controller to set cookie
+    fetch('/Culture/SetCulture', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `culture=${culture}&returnUrl=${encodeURIComponent(window.location.pathname)}`
+    })
+        .then(() => location.reload());
+}

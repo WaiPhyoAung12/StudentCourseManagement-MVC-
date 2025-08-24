@@ -84,14 +84,14 @@
             $('#confirmRedirectBtn').on('click', function () {
                 $('#dialogModal').modal('hide');
                 if (isSuccess) {
-                    window.location.href = '@Url.Action("ViewDetails", "Course")';
+                    window.location.href = '@Url.Action("GetCourseList", "Course")';
                 }
             });
 
             $('#dialogModal').on('hidden.bs.modal', function () {
                $('#dialogModal').modal('hide');
                if (isSuccess) {
-                    window.location.href = '@Url.Action("ViewDetails", "Course")';
+                    window.location.href = '@Url.Action("GetCourseList", "Course")';
                 }
             });
         });

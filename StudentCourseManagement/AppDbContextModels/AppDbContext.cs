@@ -20,6 +20,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<TblCourse> TblCourses { get; set; }
 
+    public virtual DbSet<TblEnrollment> TblEnrollments { get; set; }
+
     public virtual DbSet<TblStudent> TblStudents { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -102,6 +104,32 @@ public partial class AppDbContext : DbContext
                 .HasColumnName("updated_user_id");
         });
 
+        modelBuilder.Entity<TblEnrollment>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("tbl_enrollment");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.BatchId).HasColumnName("batch_id");
+            entity.Property(e => e.CreatedDateTime)
+                .HasColumnType("datetime")
+                .HasColumnName("created_date_time");
+            entity.Property(e => e.CreatedUserId)
+                .HasMaxLength(50)
+                .HasColumnName("created_user_id");
+            entity.Property(e => e.EnrollmentDate)
+                .HasColumnType("datetime")
+                .HasColumnName("enrollment_date");
+            entity.Property(e => e.StudentId).HasColumnName("student_id");
+            entity.Property(e => e.UpdatedDateTime)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_date_time");
+            entity.Property(e => e.UpdatedUserId)
+                .HasMaxLength(50)
+                .HasColumnName("updated_user_id");
+        });
+
         modelBuilder.Entity<TblStudent>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
@@ -112,14 +140,17 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Address)
                 .HasMaxLength(100)
                 .HasColumnName("address");
+            entity.Property(e => e.CreatedDateTime)
+                .HasColumnType("datetime")
+                .HasColumnName("created_date_time");
+            entity.Property(e => e.CreatedUserId)
+                .HasMaxLength(50)
+                .HasColumnName("created_user_id");
             entity.Property(e => e.DeleteFlag).HasColumnName("delete_flag");
             entity.Property(e => e.Email)
                 .HasMaxLength(20)
                 .HasColumnName("email");
-            entity.Property(e => e.Gender)
-                .HasMaxLength(1)
-                .IsFixedLength()
-                .HasColumnName("gender");
+            entity.Property(e => e.Gender).HasColumnName("gender");
             entity.Property(e => e.Name)
                 .HasMaxLength(45)
                 .HasColumnName("name");
@@ -129,6 +160,12 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Phone)
                 .HasMaxLength(15)
                 .HasColumnName("phone");
+            entity.Property(e => e.UpdatedDateTime)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_date_time");
+            entity.Property(e => e.UpdatedUserId)
+                .HasMaxLength(50)
+                .HasColumnName("updated_user_id");
         });
 
         OnModelCreatingPartial(modelBuilder);
